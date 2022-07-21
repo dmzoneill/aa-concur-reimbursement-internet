@@ -1,5 +1,8 @@
 # aa-concur-reimbursement-internet
 
+## Youtube video
+Click to watch
+
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/vme0-oD118Y/0.jpg)](https://www.youtube.com/watch?v=vme0-oD118Y)
 
 Quick proof of concept to download a bill and submit it in concur.
