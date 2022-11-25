@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 import subprocess
 import time
 from pathlib import Path
@@ -15,15 +16,14 @@ import sys
 import os
 
 counter = 1
-patience = 1
 mydate = datetime.now()
 chrome_driver_dir = "/usr/local/bin/"
 chrome_driver_location = chrome_driver_dir + "/chromedriver"
 profile_location = "/home/daoneill/.config/google-chrome-beta/Profile 1"
 url = "https://auth.redhat.com/auth/realms/EmployeeIDP/protocol/saml/clients/concursolutions"
 
-def step(step_str):
-    global counter, patience
+def step(step_str, patience = 1):
+    global counter
     print(str(counter) + ": " + step_str)
     counter += 1
     time.sleep(patience)
@@ -46,7 +46,7 @@ options.binary_location = "/opt/google/chrome-beta/chrome"
 service = Service(chrome_driver_location)
 driver = webdriver.Chrome(service=service, options=options)
 driver.get(url)
-wait = WebDriverWait(driver, 30)
+wait = WebDriverWait(driver, 120)
 
 password = Path('../otpanswer/key').read_text()
 token = subprocess.check_output("./getpw", cwd="../otpanswer", shell=True).decode("utf-8") 
@@ -80,59 +80,72 @@ remote_worker_expense = wait.until(EC.presence_of_element_located((By.XPATH, "//
 remote_worker_expense.click()
 
 step("Enter the date")
-bill_transaction_date = wait.until(EC.presence_of_element_located((By.ID, "transactionDate")))
+# bill_transaction_date = wait.until(EC.presence_of_element_located((By.ID, "transactionDate")))
+bill_transaction_date = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-nuiexp='field-transactionDate']")))
 bill_transaction_date.send_keys(args.bill_date)
 
 step("Enter the vendor")
-bill_vendor = wait.until(EC.presence_of_element_located((By.ID, "vendorDescription")))
+# bill_vendor = wait.until(EC.presence_of_element_located((By.ID, "vendorDescription")))
+bill_vendor = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-nuiexp='field-vendorDescription']")))
 bill_vendor.send_keys("Virgin Media" if args.vendor is None else args.vendor)
 
 step("Enter the location")
-location_vendor = wait.until(EC.presence_of_element_located((By.ID, "locName")))
+# location_vendor = wait.until(EC.presence_of_element_located((By.ID, "locName")))
+location_vendor = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-nuiexp='field-locName']")))
 location_vendor.send_keys("Cork, IRELAND" if args.location is None else args.location)
 
 step("Choose the location from drop down")
 select_country = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@id=\"13928\"]")))
 select_country.click()
 
-step("Select currency drop down")
-expense_curency = wait.until(EC.presence_of_element_located((By.ID, "transactionCurrencyName-combobox-arrow")))
-expense_curency.click()
-
 step("Choose USD")
-expense_select_usd = wait.until(EC.presence_of_element_located((By.ID, "transactionCurrencyName-group-filtered-options-listbox-option-USD")))
-expense_select_usd.click()
+# expense_curency = wait.until(EC.presence_of_element_located((By.ID, "transactionCurrencyName-combobox-arrow")))
+expense_curency = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-nuiexp='transactionCurrencyName-input']")))
+expense_curency.click()
+expense_curency.send_keys(Keys.CONTROL, 'a')
+expense_curency.send_keys(Keys.BACKSPACE)
+expense_curency.send_keys('US, Dollar')
+
+# expense_type_rme = wait.until(EC.presence_of_element_located((By.ID, "expName-group-mru-listbox-option-01123")))
+select_usd = wait.until(EC.presence_of_element_located((By.XPATH, "//*[text() = 'US, Dollar']")))
+select_usd.click()
 
 step("Enter the transaction amount")
-forty_dollars_expense = wait.until(EC.presence_of_element_located((By.ID, "transactionAmount")))
-forty_dollars_expense.send_keys("40")
+# data-nuiexp="field-transactionAmount"
+# forty_dollars_expense = wait.until(EC.presence_of_element_located((By.ID, "transactionAmount")))
+forty_dollars_expense = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-nuiexp='field-transactionAmount']")))
+forty_dollars_expense.send_keys('40')
 
 step("Click attach receipt")
 attach_receipt = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-nuiexp='attach-receipt-modal-button']")))
 attach_receipt.click()
 
 step("Set upload receipt file location")
-set_receipt_location = wait.until(EC.presence_of_element_located((By.ID, "upload-receipt")))
+# card-upload-receipt
+# set_receipt_location = wait.until(EC.presence_of_element_located((By.ID, "upload-receipt")))
+set_receipt_location = wait.until(EC.presence_of_element_located((By.ID, "card-upload-receipt")))
 set_receipt_location.send_keys(os.getcwd() + "/" + args.receipt)
 
-step("Click itemisations tab")
+step("Click itemisations tab", 10)
 itemise = wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Itemisations')]")))
 itemise.click()
 
-step("Click create itemisation")
+step("Click create itemisation", 5)
 itemise = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-enablenow-id='create-itemization-button']")))
 itemise.click()
 
 step("click itemisation drop down")
-itemization_type = wait.until(EC.presence_of_element_located((By.ID, "expName-combobox-arrow")))
+# itemization_type = wait.until(EC.presence_of_element_located((By.ID, "expName-combobox-arrow")))
+itemization_type = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-nuiexp=\"expName-dropdown-button\"]")))
 itemization_type.click()
 
 step("Choose remote worker expense")
-expense_type_rme = wait.until(EC.presence_of_element_located((By.ID, "expName-group-mru-listbox-option-01123")))
+# expense_type_rme = wait.until(EC.presence_of_element_located((By.ID, "expName-group-mru-listbox-option-01123")))
+expense_type_rme = wait.until(EC.presence_of_element_located((By.XPATH, "//*[text() = 'Remote Worker Expense']")))
 expense_type_rme.click()
 
 step("Enter the transaction amount for the itemisation")
-transactionAmount = wait.until(EC.presence_of_element_located((By.ID, "transactionAmount")))
+transactionAmount = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-nuiexp='field-transactionAmount']")))
 transactionAmount.send_keys("40")
 
 step("Click save itemisation")
@@ -152,7 +165,7 @@ submit1 = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@data-nuiexp
 submit1.click()
 
 step("Confirm 2")
-submit2 = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[8]/div/div/div[3]/button[2]")))
+submit2 = wait.until(EC.presence_of_element_located((By.XPATH, "//*[data-trans-id='report.submitReport']")))
 submit2.click()
 
 step("Close")

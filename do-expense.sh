@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 MONTH=$(date +%B)
 python3 virgin.py
 pdftotext $MONTH.pdf
