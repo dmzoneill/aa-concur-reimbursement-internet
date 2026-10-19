@@ -9,7 +9,7 @@ Quick proof of concept to download a bill and submit it in concur.
 
 A crontab like the below could automate this for you:
 ```
-0.0.111 * * do-expense.sh
+0.0.121 * * do-expense.sh
 ```
 
 ## do-expense.sh
