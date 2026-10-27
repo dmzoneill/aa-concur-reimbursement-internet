@@ -52,7 +52,7 @@ password = Path('../otpanswer/key').read_text()
 token = subprocess.check_output("./getpw", cwd="../otpanswer", shell=True).decode("utf-8")
 ```
 
-### Usage
+### Usage of concur.py
 
 ```text
 python3 concur.py \
@@ -68,7 +68,7 @@ python3 concur.py \
 - It then moves it into the current directory.
 - The name of the file will be the current month
 
-### Usage
+### Usage of virgin.py
 
 ```text
 export virgin_username="its me"
