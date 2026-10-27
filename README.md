@@ -21,7 +21,7 @@ A crontab like the below could automate this for you:
 ## do-expense.sh
 
 - This script encapsulates all the functionality.
-- see below for explaination of the indivudal python scripts
+- see below for explanation of the indivudal python scripts
 
 ### Usage
 
@@ -39,7 +39,7 @@ python3 concur.py --bill_date $bill_date --receipt $MONTH.pdf
 
 - This takes a expense data, receipt, location and a vendor.
 - Some modifications may be required for your country/currency.
-- When setting up chrome and chromedriver, You will need to create a seprate profile in chrome and define it on line 22.
+- When setting up chrome and chromedriver, You will need to create a separate profile in chrome and define it on line 22.
 
 ```text
 profile_location = "/home/daoneill/.config/google-chrome-beta/Profile 1"
