@@ -14,7 +14,7 @@ Quick proof of concept to download a bill and submit it in concur.
 
 A crontab like the below could automate this for you:
 
-```
+```text
 0.0.141 * * do-expense.sh
 ```
 
@@ -25,7 +25,7 @@ A crontab like the below could automate this for you:
 
 ### Usage
 
-```
+```text
 #!/bin/bash
 MONTH=$(date +%B)
 python3 virgin.py
@@ -41,20 +41,20 @@ python3 concur.py --bill_date $bill_date --receipt $MONTH.pdf
 - Some modifications may be required for your country/currency.
 - When setting up chrome and chromedriver, You will need to create a seprate profile in chrome and define it on line 22.
 
-```
+```text
 profile_location = "/home/daoneill/.config/google-chrome-beta/Profile 1"
 ```
 
 - lines 50, 51 are your login information
 
-```
+```text
 password = Path('../otpanswer/key').read_text()
 token = subprocess.check_output("./getpw", cwd="../otpanswer", shell=True).decode("utf-8")
 ```
 
 ### Usage
 
-```
+```text
 python3 concur.py \
     --bill_date $bill_date \
     --receipt $MONTH.pdf \
@@ -70,7 +70,7 @@ python3 concur.py \
 
 ### Usage
 
-```
+```text
 export virgin_username="its me"
 export virgin_password="l33t0r"
 python3 virgin.py
